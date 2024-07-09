@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 
 // get all Collections
 const getAllCollections = async (req, res) => {
-  const data = await Collection.find({}).sort({ createdAt: -1 });
+  const user_id = req.user._id;
+  const data = await Collection.find({ user_id }).sort({ createdAt: -1 });
   try {
     res.status(200).json(data);
   } catch (error) {
@@ -52,11 +53,13 @@ const postNewCollection = async (req, res) => {
 
   // add doc to DB
   try {
+    const user_id = req.user._id;
     const collection = await Collection.create({
       full_name,
       price,
       location,
       ph_number,
+      user_id,
     });
     res.status(200).json(collection);
   } catch (error) {
