@@ -6,7 +6,12 @@ const {
   updateACollection,
   deleteACollection,
 } = require("../controllers/collectionController");
+const requireAuth = require("../middleware/requireAuth");
+
 const router = express();
+
+// require auth for all collection routes
+router.use(requireAuth);
 
 // Get all details
 router.get("/", getAllCollections);
