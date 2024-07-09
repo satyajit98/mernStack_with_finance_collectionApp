@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCollectionContext } from "../hooks/useCollectionContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const CollectionForm = () => {
   const { dispatch } = useCollectionContext();
@@ -12,8 +13,15 @@ const CollectionForm = () => {
 
   const [error, setError] = useState(null);
 
+  const { user } = useAuthContext();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setError("You must be logged in");
+      return;
+    }
 
     const collection = { full_name, price, location, ph_number };
     const response = await fetch("/api/details", {
@@ -21,6 +29,7 @@ const CollectionForm = () => {
       body: JSON.stringify(collection),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
       },
     });
 
